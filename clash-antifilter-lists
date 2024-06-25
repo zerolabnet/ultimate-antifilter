@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Start php-fpm
+/usr/sbin/php-fpm8 -c /etc/php8/php-fpm.conf &
+
+# Start webserver
+/usr/sbin/nginx -e /dev/stderr -c /etc/nginx/nginx.conf &
+
+# Create cron job
+/usr/bin/crontab -u abc /srv/crontab
+
+# Start crond
+/usr/sbin/crond -f -L /dev/null &
+
+# Generate password and salt (if not exists)
+/srv/pwd.sh
+
+# Get antifilter rules on start (further updated via cron)
+/srv/antifilter.sh
+
+# Wait for any process to exit
+wait -n
+
+# Exit with status of process that exited first
+exit $?

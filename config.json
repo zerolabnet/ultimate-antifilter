@@ -1,0 +1,55 @@
+{
+  "input": [
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "antifilter",
+        "uri": "/var/www/allyouneed.lst",
+        "onlyIPType": "ipv4"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "antifilter-community",
+        "uri": "/var/www/community.lst",
+        "onlyIPType": "ipv4"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "proxy-ip-cidr",
+        "uri": "/var/www/data/proxy-ip-cidr",
+        "onlyIPType": "ipv4"
+      }
+    },
+    {
+      "type": "text",
+      "action": "add",
+      "args": {
+        "name": "direct-ip-cidr",
+        "uri": "/var/www/data/direct-ip-cidr",
+        "onlyIPType": "ipv4"
+      }
+    },
+    {
+      "type": "private",
+      "action": "add"
+    }
+  ],
+  "output": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "output",
+      "args": {
+        "outputDir": "/var/www",
+        "outputName": "geoip.dat",
+        "wantedList": ["antifilter", "antifilter-community", "proxy-ip-cidr", "direct-ip-cidr", "private"]
+      }
+    }
+  ]
+}
