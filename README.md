@@ -37,7 +37,7 @@ docker logs ultimate-antifilter
 
 ### Rule Format:
 
-Each tab contains an example of the data format
+Each tab contains an example of the data format.
 
 ### Go to the admin panel and prescribe the rules:
 
