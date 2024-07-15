@@ -140,8 +140,36 @@ if (!isset($_SESSION['loggedIn_cal']) || $_SESSION['loggedIn_cal'] != $hash) {
 //-----------------------------------
 // Простая форма авторизации
 
+// Конвертируем в формат Shadowrocket
+function convert_to_shadowrocket($fromFile, $toFile) {
+    $result = file_get_contents($fromFile);
+    if ($result != "\0") {
+        // Разбиваем содержимое на строки
+        $lines = explode(PHP_EOL, $result);
+        // Определяем префикс в зависимости от имени файла
+        if ($_POST['fileName'] == "proxy-domain-suffix" || $_POST['fileName'] == "direct-domain-suffix") {
+            $prefix = 'DOMAIN-SUFFIX,';
+        } elseif ($_POST['fileName'] == "proxy-ip-cidr" || $_POST['fileName'] == "direct-ip-cidr") {
+            $prefix = 'IP-CIDR,';
+        } else {
+            $prefix = '';
+        }
+        // Добавляем соответствующий префикс в начало каждой непустой строки
+        foreach ($lines as &$line) {
+            if (!empty(trim($line))) { // Игнорируем пустые строки
+                $line = $prefix . $line;
+            }
+        }
+        // Объединяем строки обратно в одно содержимое
+        $result = implode(PHP_EOL, $lines);
+    }
+    file_put_contents($toFile, $result);
+}
+
 // Конвертируем в формат Clash из формата Shadowrocket
-function convert_clash($fromFile, $toFile) {
+function convert_to_clash($fromFile, $toFile) {
+    // Добавляем .list к имени файла, так как конвертируем из формата Shadowrocket, а не из исходного файла
+    $fromFile .= '.list';
     $result = file_get_contents($fromFile);
     if ($result != "\0") {
         $result = preg_replace('/^(.*)$/m', '  - $1', $result);
@@ -168,26 +196,25 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
         $content = "\0";
     }
 
+    // Массив для сопоставления имен файлов с действиями
+    $fileActions = [
+        "proxy-domain-suffix" => ["convert_to_shadowrocket" => "proxy-domain-suffix.list", "convert_to_clash" => "proxy-domain-suffix.yaml", "script" => "/srv/geosite.sh"],
+        "direct-domain-suffix" => ["convert_to_shadowrocket" => "direct-domain-suffix.list", "convert_to_clash" => "direct-domain-suffix.yaml", "script" => "/srv/geosite.sh"],
+        "proxy-ip-cidr" => ["convert_to_shadowrocket" => "proxy-ip-cidr.list", "convert_to_clash" => "proxy-ip-cidr.yaml", "script" => "/srv/geoip.sh"],
+        "direct-ip-cidr" => ["convert_to_shadowrocket" => "direct-ip-cidr.list", "convert_to_clash" => "direct-ip-cidr.yaml", "script" => "/srv/geoip.sh"],
+    ];
+
     // Если мы смогли открыть файл
     if ($file = fopen($_POST['fileName'], "w")) {
         // Записываем его
         if (fwrite($file, $content)) {
             fclose($file);
-            if ($_POST['fileName'] == "proxy-domain-suffix.list") {
-                convert_clash("proxy-domain-suffix.list", "proxy-domain-suffix.yaml");
-                shell_exec('/srv/v2ray-conv.sh');
-            }
-            if ($_POST['fileName'] == "direct-domain-suffix.list") {
-                convert_clash("direct-domain-suffix.list", "direct-domain-suffix.yaml");
-                shell_exec('/srv/v2ray-conv.sh');
-            }
-            if ($_POST['fileName'] == "proxy-ip-cidr.list") {
-                convert_clash("proxy-ip-cidr.list", "proxy-ip-cidr.yaml");
-                shell_exec('/srv/antifilter.sh');
-            }
-            if ($_POST['fileName'] == "direct-ip-cidr.list") {
-                convert_clash("direct-ip-cidr.list", "direct-ip-cidr.yaml");
-                shell_exec('/srv/antifilter.sh');
+            // Проверяем, есть ли действия для данного имени файла
+            if (isset($fileActions[$_POST['fileName']])) {
+                $actions = $fileActions[$_POST['fileName']];
+                convert_to_shadowrocket($_POST['fileName'], $actions['convert_to_shadowrocket']);
+                convert_to_clash($_POST['fileName'], $actions['convert_to_clash']);
+                shell_exec($actions['script']);
             }
             die(json_encode(["desc" => "Saved", "level" => "success"]));
         } else {
@@ -204,8 +231,8 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAADTklEQVR42t3XTWxUVRQH8N+0FDAYIbEVAwQWjdZEgVDtgmoUFm4kMboQGyTKQhKNLggUE6NR2JBYhcaASV3RsBBkJSQsFAPE0CBoXPARMNAvbFoESmmnX7QzvS54mUCYeZ2avg33v3nv5v7P/757zrnnPBqMCglhVIMEzd+VSNR8EB4UyOiXlo2hTEjnvnvcgInoecTwZAJZZ33hbe/YobWgwBkbfOam4I5mdfYLgl5bbdQeL3Dec0rBDDXO5TU/7lMlyv0s6FGL5QYFJ5WhIU4gYxUoN09KyvuG8koc9LSXtQsGbbbYFkFwVa1KZ+IEzkthuV8ctABVOvMKZFx2I3pOu2Q88kyPrngfHAGfCLJq8bjL0xtFF83AYi1+VIFnXY0hprW6Ge39urYorsZ16i4kMOGtyMFlmGFz3rC7izu+tsBavYLr3rBIkyA4ocoL9x3tfbQ2q6TcHa/6J3b/67HEFUGbRVgnCL4HJwsn2i27valOs8wkZ9tireboOmiyLsqbGz62PZd6eTM58ati2gWGEjU/RL2jjieEo+opU64iIZQrk/yotN6GhLBeJaekDSaEtFMPQx48OHXbwCSk21ENCDL6crPDeTuU+17GHPY8yqzWYqxAyT9orhU6BEM+UqpeVtBhqXn+jBf4wRO56HrSoby9RdaXSlQ4JvjXK6g2KvjDTOyOExixECzzjJSUNXrzfsPfPvCNIUHGIe86IQgG7LDFrTiB38BrJlxThYUxrcv/cvKv4D0T+q3AfFemV6DXI5ijzutm4UXXYojtGqImJeu4RmlBMKjZkcJO3mZWzslzfBtT1YZtRKUuQaen8KEg2C8l5WwhgT6fW4JSVb5yO2b/I7YqU6tH0K1Gqe2C4JDHzHexcKKNaNfid50FsuDeAz3pqglBRqszUXKO+sulh60mdydqvpuVmuwtEqdlZZ0uen2TlVOrfpuMGbMpufKasMBs24wbt83sJMzPtVOPILhml7nTbT5lT66KBRl7cl34pKPWTt9Nir36BX0aNeoT9NtbBGuXl+iYQlTvM8ej9k2B0cnhKSw/piIqlsXiJ2ZZpmZSrHZBEHRFf5IXrC6CtdTM4t285p6f1C5rpj9MS1Q7YMCAA6qVFEv7D4KwRiCyg8MQAAAAAElFTkSuQmCC" />
     <title>Ultimate antifilter</title>
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/taboverride@4.0.3/build/output/taboverride.min.js"></script>
+    <script src="assets/jquery-2.2.0.min.js"></script>
+    <script src="assets/taboverride.min.js"></script>
     <style>
         a:link,
         a:visited {
@@ -395,12 +422,12 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
         }
 
         // Имя и путь до файла по умолчанию (вкладка Proxy)
-        var fileName = "proxy-domain-suffix.list";
+        var fileName = "proxy-domain-suffix";
 
         function setupTabHandlers() {
             loadFile(fileName); // Load the default file
             $('#tab-proxy-domain-suffix').click(function() {
-                fileName = "proxy-domain-suffix.list";
+                fileName = "proxy-domain-suffix";
                 loadFile(fileName);
                 $('#tab-proxy-domain-suffix').addClass('active');
                 $('#tab-direct-domain-suffix').removeClass('active');
@@ -409,7 +436,7 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
             });
 
             $('#tab-direct-domain-suffix').click(function() {
-                fileName = "direct-domain-suffix.list";
+                fileName = "direct-domain-suffix";
                 loadFile(fileName);
                 $('#tab-proxy-domain-suffix').removeClass('active');
                 $('#tab-direct-domain-suffix').addClass('active');
@@ -418,7 +445,7 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
             });
 
             $('#tab-proxy-ip-cidr').click(function() {
-                fileName = "proxy-ip-cidr.list";
+                fileName = "proxy-ip-cidr";
                 loadFile(fileName);
                 $('#tab-proxy-domain-suffix').removeClass('active');
                 $('#tab-direct-domain-suffix').removeClass('active');
@@ -427,7 +454,7 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
             });
 
             $('#tab-direct-ip-cidr').click(function() {
-                fileName = "direct-ip-cidr.list";
+                fileName = "direct-ip-cidr";
                 loadFile(fileName);
                 $('#tab-proxy-domain-suffix').removeClass('active');
                 $('#tab-direct-domain-suffix').removeClass('active');
