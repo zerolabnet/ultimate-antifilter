@@ -53,6 +53,40 @@ There was a separation of the lists into:  Proxy domain-suffix list | Direct dom
 
 The v2rayGeoIPDat format has been added. I use it together with v2rayA on a router with OpenWrt firmware.
 
+### v2rayGeoIPDat IP list category (geoip.dat)
+
+```
+antifilter
+antifilter-community
+proxy-ip-cidr
+direct-ip-cidr
+```
+
+### v2rayGeoIPDat domain list category (geosite.dat)
+
+```
+antifilter-community
+proxy-domain-suffix
+direct-domain-suffix
+```
+
+### Install v2rayA to OpenWrt
+
+```bash
+wget https://downloads.sourceforge.net/project/v2raya/openwrt/v2raya.pub -O /etc/opkg/keys/94cc2a834fb0aa03
+echo "src/gz v2raya https://downloads.sourceforge.net/project/v2raya/openwrt/$(. /etc/openwrt_release && echo "$DISTRIB_ARCH")" | tee -a "/etc/opkg/customfeeds.conf"
+opkg update
+opkg install v2raya kmod-nft-tproxy xray-core luci-app-v2raya
+```
+Add cron job:
+```bash
+crontab -e
+```
+```
+0 */12 * * * curl -s -o /usr/share/xray/geoip-afl.dat http://YOUR_IP:8080/geoip.dat
+*/30 * * * * curl -s -o /usr/share/xray/geosite-afl.dat http://YOUR_IP:8080/geosite.dat
+```
+
 ### Example rules for v2rayA
 
 ```
