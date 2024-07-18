@@ -63,7 +63,7 @@ At the bottom of the page will be links to your custom rules lists and to a list
 
 ### What has changed compared to Clash Antifilter Lists?
 
-There was a separation of the lists into:  Proxy domain-suffix list | Direct domain-suffix list | Proxy ip-cidr list | Direct ip-cidr list.
+There was a separation of the lists into: **Proxy domain/keyword/full** | **Direct domain/keyword/full** | **Proxy IP-CIDR** | **Direct IP-CIDR**.
 
 The v2rayGeoIPDat format has been added. I use it together with v2rayA on a router with OpenWrt firmware.
 
