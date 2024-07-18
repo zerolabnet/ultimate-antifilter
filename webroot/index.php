@@ -499,10 +499,10 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
     <div class="topnav">
         <div class="left-container">
             <button id='saveStatus' onclick='doSave();'>Apply rules to the current tab</button>
-            <span id="tab-proxy-domain-suffix" class="tab active">Proxy domain-suffix</span>
-            <span id="tab-direct-domain-suffix" class="tab">Direct domain-suffix</span>
-            <span id="tab-proxy-ip-cidr" class="tab">Proxy ip-cidr</span>
-            <span id="tab-direct-ip-cidr" class="tab">Direct ip-cidr</span>
+            <span id="tab-proxy-domain-suffix" class="tab active">Proxy DOMAIN-SUFFIX</span>
+            <span id="tab-direct-domain-suffix" class="tab">Direct DOMAIN-SUFFIX</span>
+            <span id="tab-proxy-ip-cidr" class="tab">Proxy IP-CIDR</span>
+            <span id="tab-direct-ip-cidr" class="tab">Direct IP-CIDR</span>
         </div>
         <div class="right-container">
             <a href="?logout">Logout</a>
@@ -515,20 +515,20 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
     <div class="bottomnav">
         <div><img class="icon-clash"> Clash:
             <a href="antifilter.yaml">Antifilter list</a> |
-            <a href="proxy-domain-suffix.yaml">Proxy domain-suffix list</a> |
-            <a href="direct-domain-suffix.yaml">Direct domain-suffix list</a> |
-            <a href="proxy-ip-cidr.yaml">Proxy ip-cidr list</a> |
-            <a href="direct-ip-cidr.yaml">Direct ip-cidr list</a>
+            <a href="proxy-domain-suffix.yaml">Proxy DOMAIN-SUFFIX list</a> |
+            <a href="direct-domain-suffix.yaml">Direct DOMAIN-SUFFIX list</a> |
+            <a href="proxy-ip-cidr.yaml">Proxy IP-CIDR list</a> |
+            <a href="direct-ip-cidr.yaml">Direct IP-CIDR list</a>
         </div>
         <div><img class="icon-shadowrocket"> Shadowrocket:
             <a href="antifilter.list">Antifilter list</a> |
-            <a href="proxy-domain-suffix.list">Proxy domain-suffix list</a> |
-            <a href="direct-domain-suffix.list">Direct domain-suffix list</a> |
-            <a href="proxy-ip-cidr.list">Proxy ip-cidr list</a> |
-            <a href="direct-ip-cidr.list">Direct ip-cidr list</a>
+            <a href="proxy-domain-suffix.list">Proxy DOMAIN-SUFFIX list</a> |
+            <a href="direct-domain-suffix.list">Direct DOMAIN-SUFFIX list</a> |
+            <a href="proxy-ip-cidr.list">Proxy IP-CIDR list</a> |
+            <a href="direct-ip-cidr.list">Direct IP-CIDR list</a>
         </div>
         <div><img class="icon-v2ray"> v2rayGeoIPDat:
-            <a href="geoip.dat">CIDR IPv4 list (antifilter + antifilter-community + proxy & direct ip-cidr lists provided above)</a> |
+            <a href="geoip.dat">CIDR IPv4 list (antifilter + antifilter-community + proxy & direct IP-CIDR lists provided above)</a> |
             <a href="geosite.dat">Domains list (antifilter-community + proxy & direct domain lists provided above)</a>
         </div>
         <div class="copyright"><img class="fas-fa-terminal"> created by ZeroChaos. Visit site: <a href="https://zerolab.net" target="_blank">zerolab.net</a></div>

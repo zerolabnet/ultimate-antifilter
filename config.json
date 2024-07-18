@@ -23,7 +23,7 @@
       "action": "add",
       "args": {
         "name": "proxy-ip-cidr",
-        "uri": "/var/www/data/proxy-ip-cidr",
+        "uri": "/var/www/proxy-ip-cidr",
         "onlyIPType": "ipv4"
       }
     },
@@ -32,7 +32,7 @@
       "action": "add",
       "args": {
         "name": "direct-ip-cidr",
-        "uri": "/var/www/data/direct-ip-cidr",
+        "uri": "/var/www/direct-ip-cidr",
         "onlyIPType": "ipv4"
       }
     },
