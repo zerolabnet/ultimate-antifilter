@@ -34,7 +34,7 @@ if (!isset($_SESSION['loggedIn_cal']) || $_SESSION['loggedIn_cal'] != $hash) {
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
         <title>Der Parol</title>
-        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css'>
+        <link rel='stylesheet' href='assets/normalize.min.css'>
         <style>
         *, *:before, *:after {
             box-sizing: border-box;
