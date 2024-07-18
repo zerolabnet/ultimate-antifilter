@@ -22,8 +22,8 @@
       "type": "text",
       "action": "add",
       "args": {
-        "name": "proxy-ip-cidr",
-        "uri": "/var/www/proxy-ip-cidr",
+        "name": "proxy-ip",
+        "uri": "/var/www/proxy-ip",
         "onlyIPType": "ipv4"
       }
     },
@@ -31,8 +31,8 @@
       "type": "text",
       "action": "add",
       "args": {
-        "name": "direct-ip-cidr",
-        "uri": "/var/www/direct-ip-cidr",
+        "name": "direct-ip",
+        "uri": "/var/www/direct-ip",
         "onlyIPType": "ipv4"
       }
     },
@@ -48,7 +48,7 @@
       "args": {
         "outputDir": "/var/www",
         "outputName": "geoip.dat",
-        "wantedList": ["antifilter", "antifilter-community", "proxy-ip-cidr", "direct-ip-cidr", "private"]
+        "wantedList": ["antifilter", "antifilter-community", "proxy-ip", "direct-ip", "private"]
       }
     }
   ]

@@ -39,6 +39,20 @@ docker logs ultimate-antifilter
 
 Each tab contains an example of the data format.
 
+Additionally, you can use the 'domain:', 'keyword:' and 'full:' formats on the domain tabs.
+
+Example:
+
+```
+domain:google.com
+keyword:google
+full:www.google.com
+```
+
+* Subdomain begins with domain:, followed by a valid domain name. **The prefix domain: may be omitted**.
+* Keyword begins with keyword:, followed by a string.
+* Full domain begins with full:, followed by a complete and valid domain name.
+
 ### Go to the admin panel and prescribe the rules:
 
 http://YOUR_IP:8080

@@ -29,21 +29,21 @@ RUN chmod +x /srv/antifilter.sh && \
     chmod +x /srv/ultimate-antifilter && \
     chmod +x /srv/geoip && \
     chmod +x /srv/domain-list-community && \
-    echo "example.com" > /var/www/proxy-domain-suffix && \
-    echo "192.0.2.0/24" > /var/www/proxy-ip-cidr && \
-    echo "example.net" > /var/www/direct-domain-suffix && \
-    echo "198.51.100.0/24" > /var/www/direct-ip-cidr && \
-    touch /var/www/proxy-domain-suffix.list && \
-    touch /var/www/direct-domain-suffix.list && \
-    touch /var/www/proxy-ip-cidr.list && \
-    touch /var/www/direct-ip-cidr.list && \
-    touch /var/www/proxy-domain-suffix.yaml && \
-    touch /var/www/direct-domain-suffix.yaml && \
-    touch /var/www/proxy-ip-cidr.yaml && \
-    touch /var/www/direct-ip-cidr.yaml && \
+    echo "example.com" > /var/www/proxy-domain && \
+    echo "192.0.2.0/24" > /var/www/proxy-ip && \
+    echo "example.net" > /var/www/direct-domain && \
+    echo "198.51.100.0/24" > /var/www/direct-ip && \
+    touch /var/www/proxy-domain.list && \
+    touch /var/www/direct-domain.list && \
+    touch /var/www/proxy-ip.list && \
+    touch /var/www/direct-ip.list && \
+    touch /var/www/proxy-domain.yaml && \
+    touch /var/www/direct-domain.yaml && \
+    touch /var/www/proxy-ip.yaml && \
+    touch /var/www/direct-ip.yaml && \
     chown -R abc:abc /var/www/ && \
-    ln -s /var/www/direct-domain-suffix /var/www/data/direct-domain-suffix && \
-    ln -s /var/www/proxy-domain-suffix /var/www/data/proxy-domain-suffix
+    ln -s /var/www/direct-domain /var/www/data/direct-domain && \
+    ln -s /var/www/proxy-domain /var/www/data/proxy-domain
 
 EXPOSE 8080/tcp
 

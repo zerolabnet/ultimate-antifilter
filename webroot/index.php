@@ -147,9 +147,9 @@ function convert_to_shadowrocket($fromFile, $toFile) {
         // Разбиваем содержимое на строки
         $lines = explode(PHP_EOL, $result);
         // Определяем префикс в зависимости от имени файла
-        if ($_POST['fileName'] == "proxy-domain-suffix" || $_POST['fileName'] == "direct-domain-suffix") {
+        if ($_POST['fileName'] == "proxy-domain" || $_POST['fileName'] == "direct-domain") {
             $prefix = 'DOMAIN-SUFFIX,';
-        } elseif ($_POST['fileName'] == "proxy-ip-cidr" || $_POST['fileName'] == "direct-ip-cidr") {
+        } elseif ($_POST['fileName'] == "proxy-ip" || $_POST['fileName'] == "direct-ip") {
             $prefix = 'IP-CIDR,';
         } else {
             $prefix = '';
@@ -157,7 +157,15 @@ function convert_to_shadowrocket($fromFile, $toFile) {
         // Добавляем соответствующий префикс в начало каждой непустой строки
         foreach ($lines as &$line) {
             if (!empty(trim($line))) { // Игнорируем пустые строки
-                $line = $prefix . $line;
+                if (strpos($line, 'domain:') !== false && $prefix == 'DOMAIN-SUFFIX,') {
+                    $line = str_replace('domain:', 'DOMAIN-SUFFIX,', $line);
+                } elseif (strpos($line, 'keyword:') !== false && $prefix == 'DOMAIN-SUFFIX,') {
+                    $line = str_replace('keyword:', 'DOMAIN-KEYWORD,', $line);
+                } elseif (strpos($line, 'full:') !== false && $prefix == 'DOMAIN-SUFFIX,') {
+                    $line = str_replace('full:', 'DOMAIN,', $line);
+                } else {
+                    $line = $prefix . $line;
+                }
             }
         }
         // Объединяем строки обратно в одно содержимое
@@ -198,10 +206,10 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
 
     // Массив для сопоставления имен файлов с действиями
     $fileActions = [
-        "proxy-domain-suffix" => ["convert_to_shadowrocket" => "proxy-domain-suffix.list", "convert_to_clash" => "proxy-domain-suffix.yaml", "script" => "/srv/geosite.sh"],
-        "direct-domain-suffix" => ["convert_to_shadowrocket" => "direct-domain-suffix.list", "convert_to_clash" => "direct-domain-suffix.yaml", "script" => "/srv/geosite.sh"],
-        "proxy-ip-cidr" => ["convert_to_shadowrocket" => "proxy-ip-cidr.list", "convert_to_clash" => "proxy-ip-cidr.yaml", "script" => "/srv/geoip.sh"],
-        "direct-ip-cidr" => ["convert_to_shadowrocket" => "direct-ip-cidr.list", "convert_to_clash" => "direct-ip-cidr.yaml", "script" => "/srv/geoip.sh"],
+        "proxy-domain" => ["convert_to_shadowrocket" => "proxy-domain.list", "convert_to_clash" => "proxy-domain.yaml", "script" => "/srv/geosite.sh"],
+        "direct-domain" => ["convert_to_shadowrocket" => "direct-domain.list", "convert_to_clash" => "direct-domain.yaml", "script" => "/srv/geosite.sh"],
+        "proxy-ip" => ["convert_to_shadowrocket" => "proxy-ip.list", "convert_to_clash" => "proxy-ip.yaml", "script" => "/srv/geoip.sh"],
+        "direct-ip" => ["convert_to_shadowrocket" => "direct-ip.list", "convert_to_clash" => "direct-ip.yaml", "script" => "/srv/geoip.sh"],
     ];
 
     // Если мы смогли открыть файл
@@ -422,44 +430,44 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
         }
 
         // Имя и путь до файла по умолчанию (вкладка Proxy)
-        var fileName = "proxy-domain-suffix";
+        var fileName = "proxy-domain";
 
         function setupTabHandlers() {
             loadFile(fileName); // Load the default file
-            $('#tab-proxy-domain-suffix').click(function() {
-                fileName = "proxy-domain-suffix";
+            $('#tab-proxy-domain').click(function() {
+                fileName = "proxy-domain";
                 loadFile(fileName);
-                $('#tab-proxy-domain-suffix').addClass('active');
-                $('#tab-direct-domain-suffix').removeClass('active');
-                $('#tab-proxy-ip-cidr').removeClass('active');
-                $('#tab-direct-ip-cidr').removeClass('active');
+                $('#tab-proxy-domain').addClass('active');
+                $('#tab-direct-domain').removeClass('active');
+                $('#tab-proxy-ip').removeClass('active');
+                $('#tab-direct-ip').removeClass('active');
             });
 
-            $('#tab-direct-domain-suffix').click(function() {
-                fileName = "direct-domain-suffix";
+            $('#tab-direct-domain').click(function() {
+                fileName = "direct-domain";
                 loadFile(fileName);
-                $('#tab-proxy-domain-suffix').removeClass('active');
-                $('#tab-direct-domain-suffix').addClass('active');
-                $('#tab-proxy-ip-cidr').removeClass('active');
-                $('#tab-direct-ip-cidr').removeClass('active');
+                $('#tab-proxy-domain').removeClass('active');
+                $('#tab-direct-domain').addClass('active');
+                $('#tab-proxy-ip').removeClass('active');
+                $('#tab-direct-ip').removeClass('active');
             });
 
-            $('#tab-proxy-ip-cidr').click(function() {
-                fileName = "proxy-ip-cidr";
+            $('#tab-proxy-ip').click(function() {
+                fileName = "proxy-ip";
                 loadFile(fileName);
-                $('#tab-proxy-domain-suffix').removeClass('active');
-                $('#tab-direct-domain-suffix').removeClass('active');
-                $('#tab-proxy-ip-cidr').addClass('active');
-                $('#tab-direct-ip-cidr').removeClass('active');
+                $('#tab-proxy-domain').removeClass('active');
+                $('#tab-direct-domain').removeClass('active');
+                $('#tab-proxy-ip').addClass('active');
+                $('#tab-direct-ip').removeClass('active');
             });
 
-            $('#tab-direct-ip-cidr').click(function() {
-                fileName = "direct-ip-cidr";
+            $('#tab-direct-ip').click(function() {
+                fileName = "direct-ip";
                 loadFile(fileName);
-                $('#tab-proxy-domain-suffix').removeClass('active');
-                $('#tab-direct-domain-suffix').removeClass('active');
-                $('#tab-proxy-ip-cidr').removeClass('active');
-                $('#tab-direct-ip-cidr').addClass('active');
+                $('#tab-proxy-domain').removeClass('active');
+                $('#tab-direct-domain').removeClass('active');
+                $('#tab-proxy-ip').removeClass('active');
+                $('#tab-direct-ip').addClass('active');
             });
         }
 
@@ -499,10 +507,10 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
     <div class="topnav">
         <div class="left-container">
             <button id='saveStatus' onclick='doSave();'>Apply rules to the current tab</button>
-            <span id="tab-proxy-domain-suffix" class="tab active">Proxy DOMAIN-SUFFIX</span>
-            <span id="tab-direct-domain-suffix" class="tab">Direct DOMAIN-SUFFIX</span>
-            <span id="tab-proxy-ip-cidr" class="tab">Proxy IP-CIDR</span>
-            <span id="tab-direct-ip-cidr" class="tab">Direct IP-CIDR</span>
+            <span id="tab-proxy-domain" class="tab active">Proxy domain/keyword/full</span>
+            <span id="tab-direct-domain" class="tab">Direct domain/keyword/full</span>
+            <span id="tab-proxy-ip" class="tab">Proxy IP-CIDR</span>
+            <span id="tab-direct-ip" class="tab">Direct IP-CIDR</span>
         </div>
         <div class="right-container">
             <a href="?logout">Logout</a>
@@ -513,23 +521,27 @@ else if (isset($_POST['save']) && $_POST['save'] == "1") {
     <textarea name='newContent' id='editor'></textarea>
 
     <div class="bottomnav">
-        <div><img class="icon-clash"> Clash:
-            <a href="antifilter.yaml">Antifilter list</a> |
-            <a href="proxy-domain-suffix.yaml">Proxy DOMAIN-SUFFIX list</a> |
-            <a href="direct-domain-suffix.yaml">Direct DOMAIN-SUFFIX list</a> |
-            <a href="proxy-ip-cidr.yaml">Proxy IP-CIDR list</a> |
-            <a href="direct-ip-cidr.yaml">Direct IP-CIDR list</a>
+        <div><img class="icon-clash"> Clash lists:
+            <a href="antifilter-ip.yaml">Antifilter IP-CIDR</a> |
+            <a href="antifilter-community-ip.yaml">Antifilter community IP-CIDR</a> |
+            <a href="antifilter-community-domain.yaml">Antifilter community domain</a> |
+            <a href="proxy-domain.yaml">Proxy domain/keyword/full</a> |
+            <a href="direct-domain.yaml">Direct domain/keyword/full</a> |
+            <a href="proxy-ip.yaml">Proxy IP-CIDR</a> |
+            <a href="direct-ip.yaml">Direct IP-CIDR</a>
         </div>
-        <div><img class="icon-shadowrocket"> Shadowrocket:
-            <a href="antifilter.list">Antifilter list</a> |
-            <a href="proxy-domain-suffix.list">Proxy DOMAIN-SUFFIX list</a> |
-            <a href="direct-domain-suffix.list">Direct DOMAIN-SUFFIX list</a> |
-            <a href="proxy-ip-cidr.list">Proxy IP-CIDR list</a> |
-            <a href="direct-ip-cidr.list">Direct IP-CIDR list</a>
+        <div><img class="icon-shadowrocket"> Shadowrocket lists:
+            <a href="antifilter-ip.list">Antifilter IP-CIDR</a> |
+            <a href="antifilter-community-ip.list">Antifilter community IP-CIDR</a> |
+            <a href="antifilter-community-domain.list">Antifilter community domain</a> |
+            <a href="proxy-domain.list">Proxy domain/keyword/full</a> |
+            <a href="direct-domain.list">Direct domain/keyword/full</a> |
+            <a href="proxy-ip.list">Proxy IP-CIDR</a> |
+            <a href="direct-ip.list">Direct IP-CIDR</a>
         </div>
-        <div><img class="icon-v2ray"> v2rayGeoIPDat:
-            <a href="geoip.dat">CIDR IPv4 list (antifilter + antifilter-community + proxy & direct IP-CIDR lists provided above)</a> |
-            <a href="geosite.dat">Domains list (antifilter-community + proxy & direct domain lists provided above)</a>
+        <div><img class="icon-v2ray"> v2rayGeoIPDat DBs:
+            <a href="geoip.dat">IP-CIDR (antifilter + antifilter-community + proxy & direct lists provided above)</a> |
+            <a href="geosite.dat">Domain/keyword/full (antifilter-community + proxy & direct domain/keyword/full lists provided above)</a>
         </div>
         <div class="copyright"><img class="fas-fa-terminal"> created by ZeroChaos. Visit site: <a href="https://zerolab.net" target="_blank">zerolab.net</a></div>
     </div>
