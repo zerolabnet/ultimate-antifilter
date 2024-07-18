@@ -9,13 +9,13 @@ curl -s -o ${DIR}/allyouneed.lst https://antifilter.download/list/allyouneed.lst
 curl -s -o ${DIR}/community.lst https://community.antifilter.download/list/community.lst
 
 # Download antifilter community geosite list
-curl -s -o ${DIR}/data/antifilter-community https://community.antifilter.download/list/domains.lst
+curl -s -o ${DIR}/data/antifilter-community-domain https://community.antifilter.download/list/domains.lst
 
 ### Modify for Shadowrocket & Clash ###
 # Shadowrocket
 sed -e 's/^/IP-CIDR,/' ${DIR}/allyouneed.lst > ${DIR}/antifilter-ip.list
 sed -e 's/^/IP-CIDR,/' ${DIR}/community.lst > ${DIR}/antifilter-community-ip.list
-sed -e 's/^/DOMAIN-SUFFIX,/' ${DIR}/data/antifilter-community > ${DIR}/antifilter-community-domain.list
+sed -e 's/^/DOMAIN-SUFFIX,/' ${DIR}/data/antifilter-community-domain > ${DIR}/antifilter-community-domain.list
 # Clash
 sed -e 's/^/  - /' ${DIR}/antifilter-ip.list > ${DIR}/antifilter-ip.yaml
 sed -i '1 i\payload:' ${DIR}/antifilter-ip.yaml

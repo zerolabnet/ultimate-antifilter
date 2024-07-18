@@ -4,7 +4,7 @@
       "type": "text",
       "action": "add",
       "args": {
-        "name": "antifilter",
+        "name": "antifilter-ip",
         "uri": "/var/www/allyouneed.lst",
         "onlyIPType": "ipv4"
       }
@@ -13,7 +13,7 @@
       "type": "text",
       "action": "add",
       "args": {
-        "name": "antifilter-community",
+        "name": "antifilter-community-ip",
         "uri": "/var/www/community.lst",
         "onlyIPType": "ipv4"
       }
@@ -48,7 +48,7 @@
       "args": {
         "outputDir": "/var/www",
         "outputName": "geoip.dat",
-        "wantedList": ["antifilter", "antifilter-community", "proxy-ip", "direct-ip", "private"]
+        "wantedList": ["antifilter-ip", "antifilter-community-ip", "proxy-ip", "direct-ip", "private"]
       }
     }
   ]

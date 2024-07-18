@@ -70,8 +70,8 @@ The v2rayGeoIPDat format has been added. I use it together with v2rayA on a rout
 ### v2rayGeoIPDat IP list category (geoip.dat)
 
 ```
-antifilter
-antifilter-community
+antifilter-ip
+antifilter-community-ip
 proxy-ip
 direct-ip
 ```
@@ -79,7 +79,7 @@ direct-ip
 ### v2rayGeoIPDat domain list category (geosite.dat)
 
 ```
-antifilter-community
+antifilter-community-domain
 proxy-domain
 direct-domain
 ```
@@ -117,11 +117,11 @@ default: direct
 # Domain name rules
 #domain(geosite:category-ads-all, geosite:win-spy, geosite:win-extra)->block
 domain("ext:geosite-afl.dat:direct-domain")->direct
-domain("ext:geosite-afl.dat:antifilter-community", "ext:geosite-afl.dat:proxy-domain")->proxy
+domain("ext:geosite-afl.dat:antifilter-community-domain", "ext:geosite-afl.dat:proxy-domain")->proxy
 domain(domain:2ip.io)->proxy
 
 # Destination IP rules
 ip("ext:geoip-afl.dat:direct-ip")->direct
-ip("ext:geoip-afl.dat:antifilter", "ext:geoip-afl.dat:antifilter-community", "ext:geoip-afl.dat:proxy-ip")->proxy
+ip("ext:geoip-afl.dat:antifilter-ip", "ext:geoip-afl.dat:antifilter-community-ip", "ext:geoip-afl.dat:proxy-ip")->proxy
 #ip(8.8.8.8, 8.8.4.4)->proxy
 ```
