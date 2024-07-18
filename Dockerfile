@@ -43,7 +43,7 @@ RUN chmod +x /srv/antifilter.sh && \
     touch /var/www/direct-ip-cidr.yaml && \
     chown -R abc:abc /var/www/ && \
     ln -s /var/www/direct-domain-suffix /var/www/data/direct-domain-suffix && \
-    ln -s /var/www/proxy-domain-suffix /var/www/data/proxy-domain-suffix && \
+    ln -s /var/www/proxy-domain-suffix /var/www/data/proxy-domain-suffix
 
 EXPOSE 8080/tcp
 
