@@ -1,3 +1,7 @@
+Development of the new simpler product (Super Simple Clash) continues in this repository: https://github.com/zerolabnet/SSAntifilter/
+
+---
+
 <h1 align="center">
     Ultimate Antifilter
 </h1>
