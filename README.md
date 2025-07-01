@@ -1,4 +1,4 @@
-Development of the new simpler product (Super Simple Clash) continues in this repository: https://github.com/zerolabnet/SSAntifilter/
+Development of the new simpler product (Super Simple Antifilter) continues in this repository: https://github.com/zerolabnet/SSAntifilter/
 
 ---
 
